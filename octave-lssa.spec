@@ -1,18 +1,12 @@
-%define octpkg lssa
-
-# fix debuginfo-without-sources
-%define debug_package %{nil}
-
-# Exclude .oct files from provides
-%define __provides_exclude_from ^%{octpkglibdir}/.*.oct$
+%global octpkg lssa
 
 Summary:	Spectral decompositions of irregularly-spaced time serie with Octave
 Name:		octave-%{octpkg}
-Version:	0.1.2
+Version:	0.1.4
 Release:	1
 Source0:	http://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
 # https://sourceforge.net/p/octave/lssa/ci/59af0bcd5cafce29162db3dfc42dcf326f56d8be/
-Patch0:		%{name}-0.1.2-fastlscomplex.patch
+#Patch0:		%{name}-0.1.2-fastlscomplex.patch
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://octave.sourceforge.io/%{octpkg}/
@@ -32,20 +26,31 @@ URLs).
 
 This package is part of community Octave-Forge collection.
 
-%prep
-%setup -q -c %{octpkg}-%{version}
-cp %SOURCE0 .
+%files
+%license COPYING
+%doc NEWS
+%dir %{octpkglibdir}
+%{octpkglibdir}/*
+%dir %{octpkgdir}
+%{octpkgdir}/*
 
-# Apply patch
-pushd %{octpkg}
-%patch0 -p1
-popd
+#---------------------------------------------------------------------------
+
+%prep
+%autosetup -p1 -n %{octpkg}-%{version}
+
+# remove backup files
+#find . -name \*~ -delete
 
 %build
-%octave_pkg_build #-T
+%set_build_flags
+%octave_pkg_build
 
 %install
 %octave_pkg_install
+
+%check
+%octave_pkg_check
 
 %post
 %octave_cmd pkg rebuild
@@ -55,12 +60,4 @@ popd
 
 %postun
 %octave_cmd pkg rebuild
-
-%files
-%dir %{octpkglibdir}
-%{octpkglibdir}/*
-%dir %{octpkgdir}
-%{octpkgdir}/*
-%doc %{octpkg}/NEWS
-%doc %{octpkg}/COPYING
 
