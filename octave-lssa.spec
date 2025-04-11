@@ -3,7 +3,7 @@
 Summary:	Tools to compute spectral decompositions of irregularly-spaced time series
 Name:		octave-lssa
 Version:	0.1.4
-Release:	2
+Release:	3
 License:	GPLv3+
 Group:		Sciences/Mathematics
 Url:		https://packages.octave.org/lssa/
